@@ -9,7 +9,7 @@ contract Fundraising{
     uint256 minimumUsd = 5;
 
     function deposit() public payable {
-        require(msg.value >= minimumUsd, "The minimum required amount is 1 ETH");
+        require(getConversionRate(msg.value) >= minimumUsd, "The minimum required amount is 5 USD");
     }
     
     function getPrice() public view returns (uint256) {
@@ -20,8 +20,10 @@ contract Fundraising{
         return uint256(price * 1e10);
     }
 
-    function getConversionRate() public {
-
+    function getConversionRate(uint256 ethAmount) public view returns (uint256) {
+        uint256 ethPrice = getPrice();
+        uint256 ethAmountInUsd = (ethPrice * ethAmount) / 1e18;
+        return ethAmountInUsd;
     }
 
     function withdraw() public {
