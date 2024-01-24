@@ -8,8 +8,13 @@ contract Fundraising{
 
     uint256 minimumUsd = 5;
 
+    address [] public listOfUsers;
+    mapping (address => uint256) public addressToAmountFunded;
+
     function deposit() public payable {
         require(getConversionRate(msg.value) >= minimumUsd, "The minimum required amount is 5 USD");
+        listOfUsers.push(msg.sender);
+        addressToAmountFunded[msg.sender] += msg.value;
     }
     
     function getPrice() public view returns (uint256) {
