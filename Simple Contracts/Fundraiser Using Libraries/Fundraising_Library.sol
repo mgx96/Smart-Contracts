@@ -21,5 +21,9 @@ contract Fundraising{
     }
 
     function withdraw() public {
+        for (uint256 listOfUsersIndex = 0; listOfUsersIndex < listOfUsers.length; listOfUsersIndex++){
+            address user = listOfUsers[listOfUsersIndex];
+            addressToAmountFunded[user] = 0;
+        }
     }
 }
