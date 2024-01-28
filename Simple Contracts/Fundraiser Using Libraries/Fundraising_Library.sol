@@ -13,6 +13,12 @@ contract Fundraising{
     address [] public listOfUsers;
     mapping (address => uint256) public addressToAmountFunded;
 
+    address public owner;
+
+    constructor (){
+        owner = msg.sender;
+    }
+
     function deposit() public payable {
         require(msg.value.getConversionRate() >= minimumUsd, "The minimum required amount is 5 USD");
         listOfUsers.push(msg.sender);
@@ -20,7 +26,7 @@ contract Fundraising{
         addressToAmountFunded[msg.sender] += msg.value;
     }
 
-    function withdraw() public {
+    function withdraw() public authenticateOwnership {
         for (uint256 listOfUsersIndex = 0; listOfUsersIndex < listOfUsers.length; listOfUsersIndex++){
             address user = listOfUsers[listOfUsersIndex];
             //resetting the wallet's balance to 0
@@ -29,5 +35,10 @@ contract Fundraising{
         listOfUsers = new address[](0);
         (bool callSuccess,) = payable (msg.sender).call{value: address(this).balance}("");
         require(callSuccess, "Call Failed!");
+    }
+
+    modifier authenticateOwnership(){
+                require(msg.sender == owner , "Must be owner");
+                _;
     }
 }
