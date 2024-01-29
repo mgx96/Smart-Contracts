@@ -43,4 +43,12 @@ contract Fundraising{
                 if(msg.sender != i_owner){revert notOwner();}
                 _;
     }
+
+    receive() external payable {
+        deposit();
+     }
+
+     fallback() external payable {
+        deposit();
+      }
 }
